@@ -2,16 +2,12 @@ package SOLID;
 
 public class DIP_02 {
 
-    /*
-     * TASK:
-     * The class Employee violates the DIP (Dependency Inversion Principle).
-     * Fix this!
-     */
-    
-    public static interface Notification {
+    // Abstraction
+    public interface Notification {
         void doNotify();
     }
 
+    // Low-level module depends on the abstraction
     public static class EmailNotification implements Notification {
         @Override
         public void doNotify() {
@@ -19,22 +15,22 @@ public class DIP_02 {
         }
     }
 
+    // High-level module also depends on the abstraction
     public static class Employee {
-        private EmailNotification emailNotification;
+        private Notification notification;
 
-        // Dependency Injection (again) composition
-        public Employee(EmailNotification emailNotification) {
-            this.emailNotification = emailNotification;
+        public Employee(Notification notification) {
+            this.notification = notification;
         }
-    
+
         public void notifyEmployee() {
-            emailNotification.doNotify();
+            notification.doNotify();
         }
     }
 
     public static void main(String[] args) {
-        EmailNotification emailNotification = new EmailNotification();
-        Employee employee = new Employee(emailNotification);
-        employee.notifyEmployee();
+        Notification notification = new EmailNotification();  // Abstraction used here
+        Employee employee = new Employee(notification);       // Injected via constructor
+        employee.notifyEmployee();                            // Works via interface
     }
 }
